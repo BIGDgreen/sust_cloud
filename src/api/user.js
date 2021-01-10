@@ -14,3 +14,6 @@ export function phoneLogin(telephone, otpCode) {
     })
 }
 
+export function getCode(telephone) {
+    return http.get(`${apiPrefix}getotp?telephone=${telephone}`)
+}

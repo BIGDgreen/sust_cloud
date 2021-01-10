@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '@/views/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -8,15 +8,40 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    redirect: '/fileList',
+    children: [
+      {
+        path: '/fileList',
+        name: 'FileList',
+        component: () => import('@/views/FileManage/FileList.vue')
+      },
+      {
+        path: '/uploadFile',
+        name: 'UploadFile',
+        component: () => import('@/views/FileManage/UploadFile.vue')
+      },
+      {
+        path: '/member',
+        name: 'MemberManage',
+        component: () => import('@/views/MemberManage.vue')
+      },
+      {
+        path: '/user',
+        name: 'UserInfo',
+        component: () => import('@/views/UserInfo.vue')
+      },
+    ]
   },
   {
     path: '/login',
     name: 'Login',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '/resetPwd',
+    name: 'ResetPwd',
+    component: () => import('@/views/ResetPwd.vue')
   }
 ]
 
@@ -26,19 +51,19 @@ const router = new VueRouter({
   routes
 })
 
-let whiteList = ['Login', 'PhoneLogin']
-router.beforeEach((to, from, next) => {
-  if (!whiteList.includes(to.name)) {
-    // 做登录校验
-    const username = localStorage.getItem('username')
-    if (!username) {
-      next('/login')
-    } else {
-      next()
-    }
-  } else {
-    next();
-  }
-})
+// let whiteList = ['Login', 'PhoneLogin', 'ResetPwd']
+// router.beforeEach((to, from, next) => {
+//   if (!whiteList.includes(to.name)) {
+//     // 做登录校验
+//     const username = localStorage.getItem('username')
+//     if (!username) {
+//       next('/login')
+//     } else {
+//       next()
+//     }
+//   } else {
+//     next();
+//   }
+// })
 
 export default router
