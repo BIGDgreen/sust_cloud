@@ -20,6 +20,9 @@
         <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
           <el-input v-model="form.email" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="部门" prop="apartment" :label-width="formLabelWidth">
+          <el-input v-model="form.apartment" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="手机号" prop="telephone" :label-width="formLabelWidth">
           <el-input v-model="form.telephone" autocomplete="off"></el-input>
         </el-form-item>
@@ -32,7 +35,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="importFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="importFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="onSingleImportMember">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -40,7 +43,8 @@
 
 <script>
 import SearchTable from '../components/SearchTable.vue';
-import { FORM_RULES, memberCols } from '../utils/constants'
+import { FORM_RULES, memberCols } from '../utils/constants';
+import { singleImportMember } from '../api/user';
 export default {
   name: "MemberManage",
   components: {
@@ -91,6 +95,7 @@ export default {
       form: {
         name: '',
         email: '',
+        apartment: '',
         telephone: '',
         jobId: '',
         password: '',
@@ -102,6 +107,10 @@ export default {
   methods: {
     showImportModal() {
       this.importFormVisible = true;
+    },
+    async onSingleImportMember() {
+      await singleImportMember(this.form);
+      this.importFormVisible = false;
     }
   }
 }

@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item>
         <div class="space-between">
-          <el-button type="primary" @click="$emit('onLogin')" class="login-btn-width">{{confirmText}}</el-button>
+          <el-button type="primary" @click="onSubmit" class="login-btn-width">{{confirmText}}</el-button>
           <el-button type="primary" plain @click="$emit('toLogin')" class="btn-width">返回</el-button>
         </div>
       </el-form-item>
@@ -50,6 +50,7 @@ export default {
   methods: {
     async sendCode() {
       await this.$emit('onSendCode');
+      if(!this.$refs.form.validateField('telephone')) return;
       this.$message({
         showClose: true,
         message: '验证码已发送，请注意查收',
@@ -66,6 +67,15 @@ export default {
           clearInterval(timer);
         }, 60000);
       }
+    },
+    onSubmit() {
+      this.$refs.form.validate(valid => {
+        if(valid) {
+          this.$emit('onLogin');
+        } else {
+          return false;
+        }
+      })
     }
   }
 }

@@ -2,12 +2,12 @@
   <div class="LoginForm">
     <el-form ref="form" :model="form">
       <el-form-item>
-        <el-input v-model="form.jobId" placeholder="请输入手机号/工号" clearable>
+        <el-input v-model="form.jobId" prop="jobId" placeholder="请输入手机号/工号" clearable>
           <i slot="prefix" class="el-input__icon el-icon-user"></i>
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-tooltip content="首次登录输入初始密码" placement="right" :manual="true" v-model="showTip">
+        <el-tooltip content="首次登录输入初始密码" prop="password" placement="right" :manual="true" v-model="showTip">
           <el-input v-model="form.password" placeholder="请输入密码" show-password clearable>
             <i slot="prefix" class="el-input__icon el-icon-lock"></i>
             <i
@@ -35,6 +35,11 @@ export default {
   props: {
     form: Object,
   },
+  data() {
+    return {
+      showTip: false
+    };
+  }
 }
 </script>
 

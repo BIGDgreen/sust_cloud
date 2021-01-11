@@ -16,12 +16,12 @@
           v-else
           confirmText="登录"
           :form="form2"
-          v-on:onLogin="onLogin"
+          v-on:onLogin="onPhoneLogin"
           v-on:toLogin="toLogin"
           v-on:onSendCode="sendCode"
         />
         <footer class="footer-text">
-          <center v-if="!phoneLogin" class="forget-link">忘记密码？</center>
+          <center v-if="!phoneLogin" class="forget-link" @click="toResetPwd">忘记密码？</center>
           <center>开发团队：生产实习第六组</center>
         </footer>
       </div>
@@ -33,6 +33,7 @@
 import { login, phoneLogin, getCode } from '@/api/user';
 import LoginForm from '../components/LoginForm';
 import PhoneLoginForm from '../components/PhoneLoginForm';
+import { PHONE_REP } from '../utils/constants';
 export default {
   name: 'Home',
   components: {
@@ -49,14 +50,22 @@ export default {
         telephone: '',
         otpCode: '',
       },
-      showTip: false,
       phoneLogin: false,
     }
   },
   methods: {
     async sendCode() {
       const { telephone } = this.form2;
-      telephone && await getCode(telephone);
+      if(!telephone) {
+        this.$message({
+          message: '请先填写手机号！',
+          type: 'error'
+        });
+        return Promise.reject('error');
+      }
+      if(!PHONE_REP.test(telephone)) return;
+      const res = await getCode(telephone);
+      this.$message.success(res);
     },
     _toHome(isFirstLogin) {
       const path = isFirstLogin ? './resetPwd' : './';
@@ -77,6 +86,9 @@ export default {
     },
     toLogin() {
       this.phoneLogin = false;
+    },
+    toResetPwd() {
+      this.$router.push('./resetPwd');
     }
   }
 }

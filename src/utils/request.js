@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Message } from 'element-ui';
 // 创建axios实例
 const service = axios.create({
     timeout: 10000 // 超时时间
@@ -12,17 +13,20 @@ service.defaults.headers.post['Content-Type'] = 'application/json';
 
 // 响应拦截
 service.interceptors.response.use((response) => {
+    console.log('res:', response);
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-        const { errNo } = response.data;
-        if (errNo === 0) {
+        if(response.data.status === 'success') {
             return Promise.resolve(response.data);
-        } else if (errNo === -2) {
-            this.$message.error('身份验证失败');
-            this.$router.push('/login');
+        } else {
+            const { errorMsg } = response.data.data;
+            Message({
+                message: errorMsg || '未知错误',
+                type: 'error'
+            });
+            return Promise.reject(response.data.data);
         }
-        return Promise.reject(response.data);
     } else {
         return Promise.reject(response.data);
     }
@@ -92,6 +96,26 @@ class HTTP {
     post(url, params) {
         return new Promise((resolve, reject) => {
             service.post(url, params)
+                .then((res) => {
+                    resolve(res.data);
+                }).catch((err) => {
+                    reject(err);
+                });
+        });
+    }
+    delete(url) {
+        return new Promise((resolve, reject) => {
+            service.delete(url)
+                .then((res) => {
+                    resolve(res.data);
+                }).catch((err) => {
+                    reject(err);
+                });
+        });
+    }
+    put(url, params) {
+        return new Promise((resolve, reject) => {
+            service.put(url, params)
                 .then((res) => {
                     resolve(res.data);
                 }).catch((err) => {

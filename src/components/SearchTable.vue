@@ -46,7 +46,7 @@
       class="pagination"
       background
       small
-      layout="total, sizes, prev, pager, next"
+      layout="prev, pager, next"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="10"
       :total="100"
