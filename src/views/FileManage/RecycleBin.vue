@@ -1,7 +1,6 @@
 <template>
   <div class="file-list">
     <search-table
-      :addOperation="true"
       :addCheckbox="true"
       :tableData="tableData"
       :columns="columns"
@@ -9,9 +8,8 @@
       :select="select"
     >
       <span class="extra-btns" slot="btns">
-        <el-button type="primary" @click="onDownload">下载</el-button>
-        <el-button type="primary" plain @click="onShare">分享</el-button>
-        <el-button type="primary" plain @click="onPreview">预览</el-button>
+        <el-button type="primary" @click="onBatchRestore">批量恢复</el-button>
+        <el-button type="danger" @click="onBatchDelete">批量删除</el-button>
       </span>
     </search-table>
   </div>
@@ -67,6 +65,14 @@ export default {
       tableData: arr,
       searchInput: '',
       select: ''
+    }
+  },
+  methods: {
+    onBatchRestore() {
+
+    },
+    onBatchDelete() {
+
     }
   }
 }

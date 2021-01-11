@@ -1,12 +1,12 @@
 <template>
   <div class="phone-login-form">
-    <el-form ref="form" :model="form">
-      <el-form-item>
+    <el-form ref="form" :model="form" :rules="rules">
+      <el-form-item prop="telephone">
         <el-input v-model="form.telephone" placeholder="请输入手机号" clearable>
           <i slot="prefix" class="el-input__icon el-icon-phone"></i>
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="otpCode">
         <el-input v-model="form.otpCode" maxlength="6" placeholder="请输入验证码" clearable>
           <el-button
             v-if="!sending"
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { FORM_RULES } from '../utils/constants';
 export default {
   name: 'LoginForm',
   props: {
@@ -42,6 +43,9 @@ export default {
     return {
       sending: false,
       countdown: 60,
+      rules: {
+        telephone: FORM_RULES.telephone
+      }
     }
   },
   methods: {

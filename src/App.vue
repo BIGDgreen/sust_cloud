@@ -40,4 +40,7 @@ body {
 .full-width {
   width: 100%;
 }
+.fix-width {
+  min-width: 0 !important;
+}
 </style>

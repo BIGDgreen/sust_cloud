@@ -22,6 +22,11 @@ const routes = [
         component: () => import('@/views/FileManage/UploadFile.vue')
       },
       {
+        path: '/recycleBin',
+        name: 'RecycleBin',
+        component: () => import('@/views/FileManage/RecycleBin.vue')
+      },
+      {
         path: '/member',
         name: 'MemberManage',
         component: () => import('@/views/MemberManage.vue')

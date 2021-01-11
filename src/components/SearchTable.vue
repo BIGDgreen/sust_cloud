@@ -8,20 +8,56 @@
       </el-select>
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
+    <slot name="btns"></slot>
     <el-table :data="tableData" height="400">
-      <el-table-column prop="date" label="日期" width="140">
+      <el-table-column
+        v-if="addCheckbox"
+        width="40"
+        label="">
+        <template slot-scope="scope">
+          <el-checkbox @change="handleCheck(scope.row)"></el-checkbox>
+        </template>
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="120">
+      <el-table-column
+        v-for="col in columns"
+        :key="col.prop"
+        :prop="col.prop"
+        :label="col.label"
+        :width="col.width">
       </el-table-column>
-      <el-table-column prop="address" label="地址">
+      <el-table-column
+        v-if="addOperation"
+        fixed="right"
+        label="操作"
+        width="80px"
+      >
+        <template slot-scope="scope">
+          <el-popover
+            placement="top"
+            width="160"
+            v-model="visible">
+              <p>确定删除吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
+              </div>
+              <el-button slot="reference" @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+          </el-popover>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
       class="pagination"
       background
       small
-      layout="prev, pager, next"
-      :total="1000">
+      layout="total, sizes, prev, pager, next"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="10"
+      :total="100"
+      :current-page="1"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    >
     </el-pagination>
   </div>
 </template>
@@ -29,10 +65,21 @@
 <script>
 export default {
   name: "FileList",
-   props: {
+  props: {
     tableData: Array,
     searchInput: String,
-    select: String
+    select: String,
+    columns: Array,
+    addOperation: Boolean,
+    addCheckbox: Boolean,
+  },
+  methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    }
   },
 }
 </script>

@@ -10,7 +10,8 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/fileList">文件列表</el-menu-item>
-            <el-menu-item index="/uploadFile">上传文件</el-menu-item>
+            <el-menu-item index="/uploadFile">文件上传</el-menu-item>
+            <el-menu-item index="/recycleBin">回收站</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="/member">
@@ -27,7 +28,14 @@
       <el-container>
         <el-header class="space-between">
           <strong style="font-size: 18px">科大盘</strong>
-          <div style="font-size: 12px">欢迎您，王小虎</div>
+            <el-popover
+              placement="bottom"
+              trigger="hover"
+              popper-class="fix-width"
+            >
+              <el-button type="text" @click="logout">退出登录</el-button>
+              <div slot="reference" style="font-size: 12px">欢迎您，王小虎</div>
+            </el-popover>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -40,21 +48,24 @@
 <script>
 export default {
   name: "Home",
-  data() {
-    return {
+  methods: {
+    logout() {
+      // 清除cookie
+      this.$router.push('/login');
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
- .el-header {
+.home {
+  .el-header {
     background-color: #B3C0D1;
     color: #333;
     line-height: 60px;
   }
-
   .el-aside {
     color: #333;
   }
+}
 </style>

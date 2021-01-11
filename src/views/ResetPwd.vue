@@ -18,8 +18,11 @@
       <confirm-pwd-form
         v-if="curStep === 2"
         class="phone-form-width"
+        confirmText="进入首页"
+        cancelText="上一步"
         :form="form2"
         v-on:onConfirm="onConfirm"
+        v-on:onCancel="toPrev"
       />
     </el-card>
   </div>
@@ -54,15 +57,17 @@ export default {
       telephone && await getCode(telephone);
     },
     toNext() {
-      console.log(this.curStep);
       this.curStep = 2;
+    },
+    toPrev() {
+      this.curStep = 1;
     },
     toLogin() {
       this.$router.push('./login');
     },
     onConfirm() {
       this.$router.push('./');
-    }
+    },
   }
 }
 </script>
@@ -71,7 +76,7 @@ export default {
 .reset-pwd {
   height: 100vh;
   background-image: url('../assets/bg_bg.jpg');
-  background-size: 280px;
+  background-size: 320px;
   .card-width {
     width: 40%;
   }

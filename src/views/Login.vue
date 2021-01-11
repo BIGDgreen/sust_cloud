@@ -88,7 +88,7 @@ export default {
 .login {
   height: 100vh;
   background-image: url('../assets/bg_bg.jpg');
-  background-size: 280px;
+  background-size: 320px;
   .login-form {
     margin: 60px;
     width: 232px;

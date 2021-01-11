@@ -12,7 +12,6 @@
 
 <script>
 export default {
-  name: "FileList",
-  data() {}
+  name: "FileList"
 }
 </script>
