@@ -9,7 +9,7 @@
     >
       <span class="extra-btns" slot="btns">
         <el-button type="primary" @click="showImportModal">单个导入</el-button>
-        <el-button type="primary" @click="showImportModal">批量导入</el-button>
+        <el-button type="primary" plain @click="showImportModal">批量导入</el-button>
       </span>
     </search-table>
     <el-dialog title="导入成员" :visible.sync="importFormVisible">

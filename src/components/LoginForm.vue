@@ -21,7 +21,7 @@
       </el-form-item>
       <el-form-item>
         <div class="space-between">
-          <el-button type="primary" :loading="logining" @click="$emit('onLogin')" class="btn-width">登录</el-button>
+          <el-button type="primary" @click="$emit('onLogin')" class="btn-width">登录</el-button>
           <el-button type="primary" plain @click="$emit('toPhoneLogin')">手机快捷登录</el-button>
         </div>
       </el-form-item>
@@ -34,7 +34,6 @@ export default {
   name: 'LoginForm',
   props: {
     form: Object,
-    logining: Boolean,
   },
 }
 </script>

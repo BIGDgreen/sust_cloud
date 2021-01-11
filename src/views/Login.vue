@@ -9,7 +9,6 @@
         <login-form
           v-if="!phoneLogin"
           :form="form1"
-          :logining="logining"
           v-on:onLogin="onLogin"
           v-on:toPhoneLogin="toPhoneLogin"
         />
@@ -50,7 +49,6 @@ export default {
         telephone: '',
         otpCode: '',
       },
-      logining: false,
       showTip: false,
       phoneLogin: false,
     }

@@ -9,7 +9,6 @@
         v-if="curStep === 1"
         class="phone-form-width"
         :form="form1"
-        :logining="false"
         confirmText="下一步"
         v-on:onLogin="toNext"
         v-on:toLogin="toLogin"

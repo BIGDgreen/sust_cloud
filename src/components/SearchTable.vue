@@ -1,12 +1,7 @@
 <template>
   <div class="search-table">
     <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select">
-      <el-select v-model="select" slot="prepend" placeholder="请选择">
-        <el-option label="餐厅名" value="1"></el-option>
-        <el-option label="订单号" value="2"></el-option>
-        <el-option label="用户电话" value="3"></el-option>
-      </el-select>
-      <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
     <slot name="btns"></slot>
     <el-table :data="tableData" height="400">
@@ -34,7 +29,7 @@
         <template slot-scope="scope">
           <el-popover
             placement="top"
-            width="160"
+            width="240"
             v-model="visible">
               <p>确定删除吗？</p>
               <div style="text-align: right; margin: 0">
@@ -43,6 +38,7 @@
               </div>
               <el-button slot="reference" @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
           </el-popover>
+          <el-button @click="handleClick(scope.row)" type="text" size="small">分享</el-button>
         </template>
       </el-table-column>
     </el-table>

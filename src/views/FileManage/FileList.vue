@@ -10,7 +10,6 @@
     >
       <span class="extra-btns" slot="btns">
         <el-button type="primary" @click="onDownload">下载</el-button>
-        <el-button type="primary" plain @click="onShare">分享</el-button>
         <el-button type="primary" plain @click="onPreview">预览</el-button>
       </span>
     </search-table>
@@ -68,7 +67,16 @@ export default {
       searchInput: '',
       select: ''
     }
+  },
+  methods: {
+    onDownload() {
+
+    },
+    onPreview() {
+
+    }
   }
+
 }
 </script>
 

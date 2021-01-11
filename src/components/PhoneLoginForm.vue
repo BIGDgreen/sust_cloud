@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item>
         <div class="space-between">
-          <el-button type="primary" :loading="logining" @click="$emit('onLogin')" class="login-btn-width">{{confirmText}}</el-button>
+          <el-button type="primary" @click="$emit('onLogin')" class="login-btn-width">{{confirmText}}</el-button>
           <el-button type="primary" plain @click="$emit('toLogin')" class="btn-width">返回</el-button>
         </div>
       </el-form-item>
@@ -37,7 +37,6 @@ export default {
   props: {
     form: Object,
     confirmText: String,
-    logining: Boolean,
   },
   data() {
     return {

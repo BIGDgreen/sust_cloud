@@ -17,7 +17,7 @@
           :form="pwdForm"
           confirmText="确认修改"
           v-on:onConfirm="onRestPwd"
-          v-on:onCancel="resetPwdVisible = false"
+          v-on:onCancel="closeModal"
         />
     </el-dialog>
   </div>
@@ -41,12 +41,15 @@ export default {
       },
       resetPwdVisible: false,
       pwdForm: {
-        pwd1: '',
-        pwd2: ''
+        password1: '',
+        password2: ''
       },
     }
   },
   methods: {
+    closeModal() {
+      this.resetPwdVisible = false;
+    },
     showResetPwdModal() {
       this.resetPwdVisible = true;
     },
