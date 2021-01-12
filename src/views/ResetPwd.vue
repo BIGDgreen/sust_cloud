@@ -31,6 +31,7 @@
 import PhoneLoginForm from '../components/PhoneLoginForm';
 import ConfirmPwdForm from '../components/ConfirmPwdForm';
 import { getCode, resetPwd } from '@/api/user';
+import { PHONE_REP } from '../utils/constants'
 export default {
   name: 'ResetPwd',
   components: {
@@ -53,7 +54,10 @@ export default {
    methods: {
     async sendCode() {
       const { telephone } = this.form1;
-      telephone && await getCode(telephone);
+      if(PHONE_REP.test(telephone)) {
+        const code = await getCode(telephone);
+        this.$message.success(code);
+      }
     },
     toNext() {
       this.curStep = 2;

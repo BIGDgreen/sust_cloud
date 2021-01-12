@@ -1,7 +1,7 @@
 <template>
   <div class="search-table">
-    <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select">
-    <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input v-if="isFile || isRestore" placeholder="请输入内容" v-model="searchInput" class="input-with-select">
+      <el-button slot="append" icon="el-icon-search" @click="$emit('onSearch', searchInput)"></el-button>
     </el-input>
     <slot name="btns"></slot>
     <el-table :data="tableData" height="400">
@@ -29,7 +29,7 @@
         <template slot-scope="scope">
           <el-popconfirm
             confirm-button-text='确定'
-            cancel-button-text='删除'
+            cancel-button-text='取消'
             icon="el-icon-info"
             icon-color="red"
             :title="isFile ? '确定删除吗？' : '确定禁用该用户吗？'"
@@ -37,8 +37,9 @@
           >
             <el-button slot="reference" type="text" size="small">删除</el-button>
           </el-popconfirm>
-          <el-button v-if="isFile" @click="handleShare(scope.row)" type="text" size="small" style="margin-left: 8px;">分享</el-button>
+          <el-button v-if="isFile" @click="handleShare(scope.row)" style="margin-left: 8px;" type="text" size="small">分享</el-button>
           <el-button v-if="isFile" @click="handlePreview(scope.row)" type="text" size="small">预览</el-button>
+          <el-button v-if="isRestore" @click="handleRestore(scope.row)" style="margin-left: 8px;" type="text" size="small">恢复</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,11 +48,9 @@
       background
       small
       layout="prev, pager, next"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
-      :total="100"
+      :page-size="6"
+      :total="total"
       :current-page="1"
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     >
     </el-pagination>
@@ -59,8 +58,7 @@
 </template>
 
 <script>
-import { deleteUser } from '../api/user';
-import { getShare, deleteFile } from '../api/doc';
+import { getShare } from '../api/doc';
 export default {
   name: "FileList",
   props: {
@@ -70,7 +68,9 @@ export default {
     columns: Array,
     addOperation: Boolean,
     addCheckbox: Boolean,
-    isFile: Boolean
+    isRestore: Boolean,
+    isFile: Boolean,
+    total: Number,
   },
   data() {
     return {
@@ -81,7 +81,19 @@ export default {
   methods: {
     async handleShare(row) {
       const link = await getShare(row.docPath);
-      this.$alert(link, '分享链接', {
+      const aNode = this.$createElement('a', {
+        attrs: {
+          href: link,
+          target: '_blank'
+        },
+        style: {
+          width: '380px',
+          wordBreak: 'break-all'
+        },
+        }, link);
+      this.$msgbox({
+          title: '分享链接',
+          message: aNode,
           confirmButtonText: '确定'
       });
     },
@@ -89,24 +101,18 @@ export default {
       const link = await getShare(row.docPath);
       window.open(link, '_blank');
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.$emit('changePageNumber', val);
     },
     handleCheck(row) {
       this.checkedFiles.push(row);
       localStorage.setItem('checkedFiles', JSON.stringify(this.checkedFiles));
     },
-    async handleClick(row) {
-      if(this.isFile) {
-        await deleteFile(row.docId);
-        this.$message.success('删除成功');
-      } else {
-        await deleteUser(row.uid);
-        this.$message.success('禁用成功');
-      }
+    handleClick(row) {
+      this.$emit('onDelete', row);
+    },
+    handleRestore(row) {
+      this.$emit('onRestore', row);
     }
   },
 }

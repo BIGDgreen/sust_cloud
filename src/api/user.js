@@ -1,6 +1,6 @@
 import { http } from '../utils/request'
 
-const apiPrefix = 'http://124.71.175.22:8088/user/';
+const apiPrefix = '/user/';
 
 export function login(jobId, password) {
     return http.post(`${apiPrefix}pwd_login?jobId=${jobId}&password=${password}`)

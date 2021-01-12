@@ -1,14 +1,17 @@
 <template>
   <div class="file-list">
     <search-table
-      :addCheckbox="true"
+      :isRestore="true"
+      :addOperation="true"
       :tableData="tableData"
       :columns="columns"
       :searchInput="searchInput"
       :select="select"
+      :total="total"
+      v-on:changePageNumber="changePageNumber"
+      v-on:onRestore="onRestoreFile"
     >
       <span class="extra-btns" slot="btns">
-        <el-button type="primary" @click="onBatchRestore">批量恢复</el-button>
         <el-button type="danger" @click="onEmptyBin">清空</el-button>
       </span>
     </search-table>
@@ -18,65 +21,42 @@
 <script>
 import SearchTable from '../../components/SearchTable.vue';
 import { fileCols } from '../../utils/constants';
-import { getDoc } from '../../api/doc';
+import { getDoc, emptyBin, restoreFromBin } from '../../api/doc';
 export default {
   name: "FileList",
   components: {
     SearchTable,
   },
   data() {
-    const arr = [{
-      "docId": 1,
-      "docName": "《简存取云盘》数据字典.doc",
-      "docPath": "weirwei/test/《简存取云盘》数据字典.doc",
-      "docStatus": 0,
-      "uploadTime": "2021-01-10 12:51:41",
-      "docDescribe": "2021-01-10 12:51:41",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "UNKNOW",
-      "docSize": 89
-    },
-    {
-      "docId": 3,
-      "docName": "plan.png",
-      "docPath": "weirwei/test/plan.png",
-      "docStatus": 0,
-      "uploadTime": "2021-01-11 15:40:39",
-      "docDescribe": "",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "UNKNOW",
-      "docSize": 31
-    },
-    {
-      "docId": 4,
-      "docName": "成绩单.pdf",
-      "docPath": "weirwei/test/成绩单.pdf",
-      "docStatus": 0,
-      "uploadTime": "2021-01-11 15:41:49",
-      "docDescribe": "",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "pdf",
-      "docSize": 762
-    }];
     return {
       columns: fileCols,
-      tableData: arr,
+      tableData: [],
       searchInput: '',
-      select: ''
+      select: '',
+      total: 0,
     }
   },
   async mounted() {
-    this.tableData = await getDoc(2, 213);
+    const { documentList, total } = await getDoc(1);
+    this.tableData = documentList;
+    this.total = total;
   },
   methods: {
-    onBatchRestore() {
-
+    async changePageNumber(page) {
+      this.tableData = (await getDoc(1, '', page)).documentList;
     },
     async onEmptyBin() {
-      await getDoc(1, 213);
+      await emptyBin();
+      this.$message.success('已清空');
+      this.tableData = await getDoc(1).documentList;
+    },
+    async onSearch(searchInput) {
+      const res = await getDoc(1, searchInput);
+      this.tableData = res.documentList;
+      this.total = res.total;
+    },
+    async onRestoreFile(row) {
+      await restoreFromBin(row.docPath);
     }
   }
 }

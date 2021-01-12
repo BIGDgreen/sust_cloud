@@ -6,6 +6,9 @@
       :searchInput="searchInput"
       :select="select"
       :addOperation="true"
+      :total="total"
+      v-on:changePageNumber="changePageNumber"
+      v-on:onDelete="onDeleteUser"
     >
       <span class="extra-btns" slot="btns">
         <el-button type="primary" @click="showImportModal">单个导入</el-button>
@@ -44,7 +47,7 @@
 <script>
 import SearchTable from '../components/SearchTable.vue';
 import { FORM_RULES, memberCols } from '../utils/constants';
-import { singleImportMember, getAllUsers } from '../api/user';
+import { singleImportMember, getAllUsers, deleteUser } from '../api/user';
 export default {
   name: "MemberManage",
   components: {
@@ -53,6 +56,7 @@ export default {
   data() {
     return {
       tableData: [],
+      total: 0,
       searchInput: '',
       select: '',
       columns: memberCols,
@@ -70,15 +74,29 @@ export default {
     }
   },
   async mounted() {
-    this.tableData = await getAllUsers(1);
+    const res = await getAllUsers(1);
+    this.tableData = res.userVOList;
+    this.total = res.total;
   },
   methods: {
     showImportModal() {
       this.importFormVisible = true;
     },
+    async changePageNumber(page) {
+      this.tableData = (await getAllUsers(page)).userVOList;
+    },
     async onSingleImportMember() {
       await singleImportMember(this.form);
       this.importFormVisible = false;
+      this.form.resetFileds();
+      const res = await getAllUsers(1);
+      this.tableData = res.userVOList;
+      this.total = res.total;
+    },
+    async onDeleteUser(row) {
+      await deleteUser(row.uid);
+      this.$message.success('用户已被禁用');
+      this.tableData = (await getAllUsers(1)).userVOList;
     }
   }
 }

@@ -2,7 +2,7 @@
   <div class="file-list flex-column center">
     <el-upload
       drag
-      :action="`${apiPrefix}/file`"
+      action="http://124.71.175.22:8088/file"
       :data="data"
       ref="upload"
       :on-success="successUpload"
@@ -16,14 +16,12 @@
 </template>
 
 <script>
-import { uploadFile, apiPrefix } from '../../api/doc';
 export default {
   name: "FileList",
   data() {
     return {
       data: {
         uid: localStorage.getItem('uid'),
-        apiPrefix: apiPrefix
       }
     }
   },
@@ -31,10 +29,6 @@ export default {
     successUpload(response, file) {
       this.file = file;
       this.name = file.name;
-    },
-    async uploadFile() {
-      await uploadFile(this.file, this.name);
-      this.$message.success('上传成功');
     }
   }
 }

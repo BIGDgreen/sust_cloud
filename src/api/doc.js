@@ -1,11 +1,11 @@
 import { http } from '../utils/request'
 
-export const apiPrefix = 'http://124.71.175.22:8088/doc/';
+export const apiPrefix = '/doc/';
 
 const uid = localStorage.getItem('uid');
 
-export function getDoc(target, search = '', pageNumber = 1, pageSize = 15) {
-  return http.get(`${apiPrefix}documentList?target=${target}&uid=${uid}&pageNumber=${pageNumber}&pageSize=${pageSize}&search=${search}`)
+export function getDoc(target, search = '', page = 1, size = 6) {
+  return http.get(`${apiPrefix}documentList?target=${target}&uid=${uid}&page=${page}&size=${size}&search=${search}`)
 }
 
 export function getShare(objectKey) {
@@ -21,13 +21,13 @@ export function uploadFile(file) {
 }
 
 export function deleteFile(objectKey) {
-  return http.delete(`${apiPrefix}file?objectKeyList[]=${objectKey}&uid=${uid}`)
+  return http.post(`${apiPrefix}fileDelete?objectKey=${objectKey}&uid=${uid}`)
 }
 
 export function emptyBin() {
-  return http.delete(`${apiPrefix}bin?uid=${uid}`)
+  return http.post(`${apiPrefix}bin?uid=${uid}`)
 }
 
-export function restoreFromBin(objectKeyList){
-  return http.put(`${apiPrefix}bin?objectKeyList=${objectKeyList}&uid=${uid}`)
+export function restoreFromBin(objectKey){
+  return http.post(`${apiPrefix}file?objectKey=${objectKey}&uid=${uid}`)
 }

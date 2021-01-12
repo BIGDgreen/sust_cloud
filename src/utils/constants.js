@@ -1,3 +1,5 @@
+export const baseUrl = 'http://124.71.175.22:8088';
+
 export const PHONE_REP = /^1[3456789]\d{9}$/;
 
 export const JOB_ID_REP = /^[A-Z]\d{4}[A-Z]\d{2}$/;

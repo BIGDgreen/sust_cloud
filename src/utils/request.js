@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { Message } from 'element-ui';
+import { baseUrl } from '../utils/constants';
 // 创建axios实例
 const service = axios.create({
     timeout: 10000, // 超时时间
     withCredentials: true
 });
 // 根据环境设置默认接口url
-// if (process.env.NOD_ENV === 'development') {
-// service.defaults.baseURL = 'http://222.24.121.11:8802/';
-// }
+service.defaults.baseURL = baseUrl;
+
 // 设置post请求头
 service.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -96,26 +96,6 @@ class HTTP {
     post(url, params) {
         return new Promise((resolve, reject) => {
             service.post(url, params)
-                .then((res) => {
-                    resolve(res.data);
-                }).catch((err) => {
-                    reject(err);
-                });
-        });
-    }
-    delete(url) {
-        return new Promise((resolve, reject) => {
-            service.delete(url)
-                .then((res) => {
-                    resolve(res.data);
-                }).catch((err) => {
-                    reject(err);
-                });
-        });
-    }
-    put(url, params) {
-        return new Promise((resolve, reject) => {
-            service.put(url, params)
                 .then((res) => {
                     resolve(res.data);
                 }).catch((err) => {
