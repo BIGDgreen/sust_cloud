@@ -30,7 +30,7 @@
 <script>
 import PhoneLoginForm from '../components/PhoneLoginForm';
 import ConfirmPwdForm from '../components/ConfirmPwdForm';
-import { getCode } from '@/api/user';
+import { getCode, resetPwd } from '@/api/user';
 export default {
   name: 'ResetPwd',
   components: {
@@ -64,8 +64,16 @@ export default {
     toLogin() {
       this.$router.push('./login');
     },
-    onConfirm() {
-      this.$router.push('./');
+    async onConfirm() {
+      const { telephone } = this.form1;
+      const { password1, password2 } = this.form2;
+      const uid = localStorage.getItem('uid');
+      if(password1 === password2) {
+        await resetPwd(uid, password2, telephone);
+        this.$router.push('./');
+      } else {
+        this.$message.error('两次密码输入不一致');
+      }
     },
   }
 }

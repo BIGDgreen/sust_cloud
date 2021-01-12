@@ -3,8 +3,8 @@
     <el-card class="info-card">
       <img :src="user.avatar" class="avatar">
       <div style="padding: 14px;">
-        <div class="info-item">用户名：{{user.username}}</div>
-        <div class="info-item">工号：{{user.jobId}}</div>
+        <div class="info-item">用户名：{{user.name}}</div>
+        <div class="info-item">工号：{{user.uid}}</div>
         <div class="info-item">手机号：{{user.telephone}}</div>
         <div class="info-item">邮箱：{{user.email}}</div>
         <div class="bottom clearfix">
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import { getUserInfo } from '../utils/utils';
+import { resetPwd } from '../api/user';
 import ConfirmPwdForm from '../components/ConfirmPwdForm';
 export default {
   name: "UserInfo",
@@ -32,13 +34,7 @@ export default {
   },
   data() {
     return {
-      user: {
-        avatar: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        username: '王小虎',
-        jobId: '123',
-        telephone: '123456',
-        email: '123@qq.com'
-      },
+      user: getUserInfo(),
       resetPwdVisible: false,
       pwdForm: {
         password1: '',
@@ -49,12 +45,22 @@ export default {
   methods: {
     closeModal() {
       this.resetPwdVisible = false;
+      this.pwdForm.resetFields();
     },
     showResetPwdModal() {
       this.resetPwdVisible = true;
     },
-    onRestPwd() {
-      this.resetPwdVisible = false;
+    async onRestPwd() {
+      const { password1, password2 } = this.pwdForm;
+      const { uid, telephone } = this.user;
+      if(password1 === password2) {
+        await resetPwd(uid, password2, telephone);
+        this.resetPwdVisible = false;
+        this.$message.success('修改成功');
+        this.pwdForm.resetFields();
+      } else {
+        this.$message.error('两次密码输入不一致');
+      }
     }
   }
 }
@@ -74,9 +80,15 @@ export default {
     color: #6e6e6e;
     line-height: 32px;
   }
+  /deep/ .el-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   /deep/ .el-dialog {
-  margin-top: 10vh !important;
-  width: 32%;
+    margin-top: 10vh !important;
+    width: 32%;
   }
   /deep/ .el-dialog__body {
     padding: 20px 60px 10px 40px;

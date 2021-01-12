@@ -2,7 +2,8 @@ import axios from 'axios';
 import { Message } from 'element-ui';
 // 创建axios实例
 const service = axios.create({
-    timeout: 10000 // 超时时间
+    timeout: 10000, // 超时时间
+    withCredentials: true
 });
 // 根据环境设置默认接口url
 // if (process.env.NOD_ENV === 'development') {
@@ -13,7 +14,6 @@ service.defaults.headers.post['Content-Type'] = 'application/json';
 
 // 响应拦截
 service.interceptors.response.use((response) => {
-    console.log('res:', response);
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {

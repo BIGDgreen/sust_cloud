@@ -26,8 +26,8 @@
         <el-form-item label="手机号" prop="telephone" :label-width="formLabelWidth">
           <el-input v-model="form.telephone" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="工号" prop="jobId" :label-width="formLabelWidth">
-          <el-input v-model="form.jobId" autocomplete="off"></el-input>
+        <el-form-item label="工号" prop="uid" :label-width="formLabelWidth">
+          <el-input v-model="form.uid" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="初始密码" prop="password" :label-width="formLabelWidth">
           <el-input v-model="form.password" autocomplete="off"></el-input>
@@ -44,50 +44,15 @@
 <script>
 import SearchTable from '../components/SearchTable.vue';
 import { FORM_RULES, memberCols } from '../utils/constants';
-import { singleImportMember } from '../api/user';
+import { singleImportMember, getAllUsers } from '../api/user';
 export default {
   name: "MemberManage",
   components: {
     SearchTable,
   },
   data() {
-    SearchTable
-    const arr = [
-    {
-      "uid": "A0101D01",
-      "name": "王二",
-      "telephone": "13609886654",
-      "email": "18222443511@qq.com",
-      "avatar": "https://img2.woyaogexing.com/2021/01/03/dcf67427410140e0a50656da1b03e451!400x400.jpeg",
-      "apartment": "后端"
-    },
-    {
-      "uid": "A0101D02",
-      "name": "张三",
-      "telephone": "13539110850",
-      "email": "13609886654@qq.com",
-      "avatar": "https://img2.woyaogexing.com/2021/01/03/dcf67427410140e0a50656da1b03e451!400x401.jpeg",
-      "apartment": "后端"
-    },
-    {
-      "uid": "A0102123",
-      "name": "乔",
-      "telephone": "15336155900",
-      "email": "1491195822@qq.com",
-      "avatar": "https://www.woyaogexing.com/touxiang/katong/2021/1086622.html",
-      "apartment": "后端"
-    },
-    {
-      "uid": "C0103D13",
-      "name": "王一",
-      "telephone": "18222443511",
-      "email": "18312573526@qq.com",
-      "avatar": "https://img2.woyaogexing.com/2021/01/03/dcf67427410140e0a50656da1b03e451!400x400.jpeg",
-      "apartment": "后端"
-    }
-  ];
     return {
-      tableData: arr,
+      tableData: [],
       searchInput: '',
       select: '',
       columns: memberCols,
@@ -97,12 +62,15 @@ export default {
         email: '',
         apartment: '',
         telephone: '',
-        jobId: '',
+        uid: '',
         password: '',
       },
       rules: FORM_RULES,
       formLabelWidth: '100px'
     }
+  },
+  async mounted() {
+    this.tableData = await getAllUsers(1);
   },
   methods: {
     showImportModal() {

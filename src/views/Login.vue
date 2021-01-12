@@ -67,19 +67,25 @@ export default {
       const res = await getCode(telephone);
       this.$message.success(res);
     },
-    _toHome(isFirstLogin) {
-      const path = isFirstLogin ? './resetPwd' : './';
+    _toHome(first) {
+      const path = first ? './resetPwd' : './';
       this.$router.push(path);
     },
     async onLogin() {
       const { password, jobId } = this.form1;
-      const { isFirstLogin } = await login(password, jobId);
-      this._toHome(isFirstLogin);
+      const user = await login(jobId, password);
+      const { first, uid } = user;
+      localStorage.setItem('uid', uid);
+      localStorage.setItem('user', JSON.stringify(user));
+      this._toHome(first);
     },
     async onPhoneLogin() {
       const { telephone, otpCode } = this.form2;
-      const { isFirstLogin } = await phoneLogin(telephone, otpCode);
-      this._toHome(isFirstLogin);
+      const user = await phoneLogin(telephone, otpCode);
+      const { first, uid } = user;
+      localStorage.setItem('uid', uid);
+      localStorage.setItem('user', JSON.stringify(user));
+      this._toHome(first);
     },
     toPhoneLogin() {
       this.phoneLogin = true;

@@ -7,10 +7,10 @@
       :columns="columns"
       :searchInput="searchInput"
       :select="select"
+      :isFile="true"
     >
       <span class="extra-btns" slot="btns">
         <el-button type="primary" @click="onDownload">下载</el-button>
-        <el-button type="primary" plain @click="onPreview">预览</el-button>
       </span>
     </search-table>
   </div>
@@ -19,64 +19,33 @@
 <script>
 import SearchTable from '../../components/SearchTable.vue';
 import { fileCols } from '../../utils/constants'
+import { getDoc, apiPrefix } from "../../api/doc";
 export default {
   name: "FileList",
   components: {
     SearchTable,
   },
   data() {
-    const arr = [{
-      "docId": 1,
-      "docName": "《简存取云盘》数据字典.doc",
-      "docPath": "weirwei/test/《简存取云盘》数据字典.doc",
-      "docStatus": 0,
-      "uploadTime": "2021-01-10 12:51:41",
-      "docDescribe": "2021-01-10 12:51:41",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "UNKNOW",
-      "docSize": 89
-    },
-    {
-      "docId": 3,
-      "docName": "plan.png",
-      "docPath": "weirwei/test/plan.png",
-      "docStatus": 0,
-      "uploadTime": "2021-01-11 15:40:39",
-      "docDescribe": "",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "UNKNOW",
-      "docSize": 31
-    },
-    {
-      "docId": 4,
-      "docName": "成绩单.pdf",
-      "docPath": "weirwei/test/成绩单.pdf",
-      "docStatus": 0,
-      "uploadTime": "2021-01-11 15:41:49",
-      "docDescribe": "",
-      "deleteTime": "2000-01-01 00:00:00",
-      "uid": "201706020228",
-      "docType": "pdf",
-      "docSize": 762
-    }];
     return {
       columns: fileCols,
-      tableData: arr,
+      tableData: [],
       searchInput: '',
       select: ''
     }
   },
+  async mounted() {
+    this.tableData = await getDoc(2);
+  },
   methods: {
-    onDownload() {
-
+    async onDownload() {
+      const checkedFiles = JSON.parse(localStorage.getItem('checkedFiles'));
+      checkedFiles.forEach(item => {
+        window.open(`${apiPrefix}file?objectKey=${item.docPath}&uid=${localStorage.getItem('uid')}`, '_blank');
+      });
     },
     onPreview() {
-
     }
-  }
-
+  },
 }
 </script>
 

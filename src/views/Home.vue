@@ -14,7 +14,7 @@
             <el-menu-item index="/recycleBin">回收站</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="/member">
+        <el-menu-item index="/member" v-if="isAdmin">
           <i class="el-icon-setting"></i>
           <span slot="title">成员管理</span>
         </el-menu-item>
@@ -34,7 +34,7 @@
               popper-class="fix-width"
             >
               <el-button type="text" @click="logout">退出登录</el-button>
-              <div slot="reference" style="font-size: 12px">欢迎您，王小虎</div>
+              <div slot="reference" style="font-size: 12px">欢迎您，{{ username }}</div>
             </el-popover>
         </el-header>
         <el-main>
@@ -46,14 +46,22 @@
 </template>
 
 <script>
+import { isAdmin, getUsername } from '../utils/utils';
 export default {
   name: "Home",
+  data() {
+    return {
+      isAdmin: isAdmin(),
+      username: getUsername()
+    }
+  },
   methods: {
     logout() {
-      // 清除cookie
+      localStorage.removeItem('uid');
+      localStorage.removeItem('user');
       this.$router.push('/login');
     }
-  }
+  },
 }
 </script>
 

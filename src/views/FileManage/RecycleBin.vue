@@ -9,7 +9,7 @@
     >
       <span class="extra-btns" slot="btns">
         <el-button type="primary" @click="onBatchRestore">批量恢复</el-button>
-        <el-button type="danger" @click="onBatchDelete">批量删除</el-button>
+        <el-button type="danger" @click="onEmptyBin">清空</el-button>
       </span>
     </search-table>
   </div>
@@ -17,7 +17,8 @@
 
 <script>
 import SearchTable from '../../components/SearchTable.vue';
-import { fileCols } from '../../utils/constants'
+import { fileCols } from '../../utils/constants';
+import { getDoc } from '../../api/doc';
 export default {
   name: "FileList",
   components: {
@@ -67,12 +68,15 @@ export default {
       select: ''
     }
   },
+  async mounted() {
+    this.tableData = await getDoc(2, 213);
+  },
   methods: {
     onBatchRestore() {
 
     },
-    onBatchDelete() {
-
+    async onEmptyBin() {
+      await getDoc(1, 213);
     }
   }
 }

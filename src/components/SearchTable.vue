@@ -24,21 +24,21 @@
         v-if="addOperation"
         fixed="right"
         label="操作"
-        width="80px"
+        width="120px"
       >
         <template slot-scope="scope">
-          <el-popover
-            placement="top"
-            width="240"
-            v-model="visible">
-              <p>确定删除吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
-              </div>
-              <el-button slot="reference" @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
-          </el-popover>
-          <el-button @click="handleClick(scope.row)" type="text" size="small">分享</el-button>
+          <el-popconfirm
+            confirm-button-text='确定'
+            cancel-button-text='删除'
+            icon="el-icon-info"
+            icon-color="red"
+            :title="isFile ? '确定删除吗？' : '确定禁用该用户吗？'"
+            @confirm="handleClick(scope.row)"
+          >
+            <el-button slot="reference" type="text" size="small">删除</el-button>
+          </el-popconfirm>
+          <el-button v-if="isFile" @click="handleShare(scope.row)" type="text" size="small" style="margin-left: 8px;">分享</el-button>
+          <el-button v-if="isFile" @click="handlePreview(scope.row)" type="text" size="small">预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import { deleteUser } from '../api/user';
+import { getShare, deleteFile } from '../api/doc';
 export default {
   name: "FileList",
   props: {
@@ -68,13 +70,43 @@ export default {
     columns: Array,
     addOperation: Boolean,
     addCheckbox: Boolean,
+    isFile: Boolean
+  },
+  data() {
+    return {
+      deleteVisible: false,
+      checkedFiles: []
+    }
   },
   methods: {
+    async handleShare(row) {
+      const link = await getShare(row.docPath);
+      this.$alert(link, '分享链接', {
+          confirmButtonText: '确定'
+      });
+    },
+    async handlePreview(row) {
+      const link = await getShare(row.docPath);
+      window.open(link, '_blank');
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    handleCheck(row) {
+      this.checkedFiles.push(row);
+      localStorage.setItem('checkedFiles', JSON.stringify(this.checkedFiles));
+    },
+    async handleClick(row) {
+      if(this.isFile) {
+        await deleteFile(row.docId);
+        this.$message.success('删除成功');
+      } else {
+        await deleteUser(row.uid);
+        this.$message.success('禁用成功');
+      }
     }
   },
 }

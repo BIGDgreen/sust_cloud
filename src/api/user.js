@@ -3,19 +3,15 @@ import { http } from '../utils/request'
 const apiPrefix = 'http://124.71.175.22:8088/user/';
 
 export function login(jobId, password) {
-    return http.post(apiPrefix + 'pwd_login', {
-        jobId, password
-    })
+    return http.post(`${apiPrefix}pwd_login?jobId=${jobId}&password=${password}`)
 }
 
 export function phoneLogin(telephone, otpCode) {
-    return http.post(apiPrefix + 'phone_login', {
-        telephone, otpCode
-    })
+    return http.post(`${apiPrefix}phone_login?telephone=${telephone}&otpCode=${otpCode}`)
 }
 
-export function resetPwd(objId, password, telephone) {
-    return http.get(`${apiPrefix}update?objId=${objId}&password=${password}&telephone=${telephone}`)
+export function resetPwd(jobId, password, telephone) {
+    return http.get(`${apiPrefix}update?jobId=${jobId}&password=${password}&telephone=${telephone}`)
 }
 
 export function getCode(telephone) {
@@ -38,6 +34,10 @@ export function batchImportMember(file) {
 
 export function singleImportMember(user) {
     return http.post(apiPrefix + 'insert/one', {
-        user
+        ...user
     })
+}
+
+export function deleteUser(jobId) {
+    return http.post(apiPrefix + 'delete/one', jobId)
 }

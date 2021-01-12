@@ -56,19 +56,19 @@ const router = new VueRouter({
   routes
 })
 
-// let whiteList = ['Login', 'PhoneLogin', 'ResetPwd']
-// router.beforeEach((to, from, next) => {
-//   if (!whiteList.includes(to.name)) {
-//     // 做登录校验
-//     const username = localStorage.getItem('username')
-//     if (!username) {
-//       next('/login')
-//     } else {
-//       next()
-//     }
-//   } else {
-//     next();
-//   }
-// })
+let whiteList = ['Login', 'PhoneLogin', 'ResetPwd']
+router.beforeEach((to, from, next) => {
+  if (!whiteList.includes(to.name)) {
+    // 做登录校验
+    const uid = localStorage.getItem('uid')
+    if (!uid) {
+      next('/login')
+    } else {
+      next()
+    }
+  } else {
+    next();
+  }
+})
 
 export default router
