@@ -2,7 +2,7 @@
   <div class="file-list flex-column center">
     <el-upload
       drag
-      action="http://124.71.175.22:8088/file"
+      action="http://124.71.175.22:8088/doc/file"
       :data="data"
       ref="upload"
       :on-success="successUpload"
